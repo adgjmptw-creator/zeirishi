@@ -1,11 +1,14 @@
 import { db } from './dexie.js'
 import subjectsData from '../../content/subjects.json'
 
-// Card files
+// Card files - ordered from absolute-beginner intro to advanced.
+import bkCh00a from '../../content/cards/bookkeeping/ch00a_intro.json'
+import bkCh00b from '../../content/cards/bookkeeping/ch00b_basics.json'
 import bkCh01 from '../../content/cards/bookkeeping/ch01.json'
 import bkCh02 from '../../content/cards/bookkeeping/ch02.json'
 import bkCh03 from '../../content/cards/bookkeeping/ch03.json'
 import bkCh04 from '../../content/cards/bookkeeping/ch04.json'
+import fsCh00 from '../../content/cards/financial_statements/ch00_intro.json'
 import fsCh01 from '../../content/cards/financial_statements/ch01.json'
 import fsCh02 from '../../content/cards/financial_statements/ch02.json'
 import fsCh03 from '../../content/cards/financial_statements/ch03.json'
@@ -18,9 +21,21 @@ import fsQ01 from '../../content/questions/financial_statements/ch01.json'
 import fsQ02 from '../../content/questions/financial_statements/ch02.json'
 
 // Bump this whenever built-in content JSON changes so reloads pick it up.
-const CONTENT_VERSION = 3
+const CONTENT_VERSION = 4
 
-const CARD_FILES = [bkCh01, bkCh02, bkCh03, bkCh04, fsCh01, fsCh02, fsCh03, fsCh04]
+const CARD_FILES = [
+  bkCh00a,
+  bkCh00b,
+  bkCh01,
+  bkCh02,
+  bkCh03,
+  bkCh04,
+  fsCh00,
+  fsCh01,
+  fsCh02,
+  fsCh03,
+  fsCh04,
+]
 const QUESTION_FILES = [bkQ01, bkQ02, fsQ01, fsQ02]
 
 export async function seedContent() {
@@ -63,6 +78,10 @@ export async function seedContent() {
           front: c.front,
           back: c.back,
           memory_tip: c.memory_tip ?? null,
+          // curriculum_level: 1 = 超入門, 2 = 基礎, 3 = 発展, 4 = 応用
+          // Cards without an explicit level default to 3 (advanced) so
+          // beginner intro cards naturally come first in the mission order.
+          curriculum_level: c.curriculum_level ?? 3,
           frequency_rank: c.frequency_rank ?? 'B',
           difficulty: c.difficulty ?? 1,
           subject_id,

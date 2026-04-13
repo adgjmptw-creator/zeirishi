@@ -43,8 +43,14 @@ export function buildMission({
     }
   }
   dueCards.sort((a, b) => a._due - b._due)
-  // A-rank first for new intros so high-frequency topics come first.
-  newCards.sort((a, b) => rankOrder(a.frequency_rank) - rankOrder(b.frequency_rank))
+  // New intros: curriculum level first (超入門 → 基礎 → 発展), then
+  // frequency rank within the same level. This is what protects a pure
+  // beginner from being thrown an advanced card on day one.
+  newCards.sort((a, b) => {
+    const levelDiff = (a.curriculum_level ?? 3) - (b.curriculum_level ?? 3)
+    if (levelDiff !== 0) return levelDiff
+    return rankOrder(a.frequency_rank) - rankOrder(b.frequency_rank)
+  })
 
   const missionCards = [...dueCards, ...newCards].slice(0, cardSlots)
 
