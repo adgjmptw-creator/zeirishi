@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - claude/push-hello-world-spec-VA1r9
   workflow_dispatch:
 
 permissions:
