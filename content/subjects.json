@@ -1,0 +1,12 @@
+[
+  {
+    "id": "bookkeeping",
+    "name": "簿記論",
+    "category": "accounting"
+  },
+  {
+    "id": "financial_statements",
+    "name": "財務諸表論",
+    "category": "accounting"
+  }
+]

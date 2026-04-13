@@ -1,0 +1,30 @@
+{
+  "subject_id": "bookkeeping",
+  "chapter_id": "bk_ch01_basics",
+  "chapter_title": "簿記の基礎",
+  "topic_id": "bk_ch01_t01_five_elements",
+  "topic_title": "簿記の5要素と借方・貸方",
+  "cards": [
+    {
+      "id": "bk_c001",
+      "front": "簿記の5要素とは？",
+      "back": "資産・負債・純資産（資本）・収益・費用の5つ。\nB/Sに表示されるのが資産・負債・純資産、P/Lに表示されるのが収益・費用。",
+      "frequency_rank": "A",
+      "difficulty": 1
+    },
+    {
+      "id": "bk_c002",
+      "front": "借方（左）・貸方（右）の位置は、資産・負債・純資産・収益・費用でそれぞれどちら側に増加するか？",
+      "back": "借方（左）増加: 資産・費用\n貸方（右）増加: 負債・純資産・収益\n減少はそれぞれ反対側に記入する。",
+      "frequency_rank": "A",
+      "difficulty": 1
+    },
+    {
+      "id": "bk_c003",
+      "front": "発生主義会計とは？",
+      "back": "現金の収支ではなく、経済的事実（取引）の発生時点で収益・費用を認識する考え方。\n例: 商品を掛けで販売した時点で売上を計上（代金未受取でも計上する）。",
+      "frequency_rank": "A",
+      "difficulty": 2
+    }
+  ]
+}
