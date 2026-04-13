@@ -1,35 +1,12 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback } from 'react'
 import { db } from '../db/dexie.js'
 import { initialCardState, sm2 } from '../utils/sm2.js'
+import { todayKey } from './useStreak.js'
 
-// Loads all cards whose next_review_at is in the past (or have no state yet).
-// Returns { dueCards, loading, grade(cardId, grade), refresh }.
+// Thin helper for grading a single card. The Mission page owns the session
+// list, so this hook no longer loads cards itself.
 export function useSRS() {
-  const [dueCards, setDueCards] = useState([])
-  const [loading, setLoading] = useState(true)
-
-  const refresh = useCallback(async () => {
-    setLoading(true)
-    const now = Date.now()
-    const allCards = await db.cards.toArray()
-    const states = await db.cardState.toArray()
-    const stateMap = new Map(states.map((s) => [s.card_id, s]))
-
-    const due = allCards.filter((card) => {
-      const s = stateMap.get(card.id)
-      if (!s) return true
-      return s.next_review_at <= now
-    })
-
-    setDueCards(due)
-    setLoading(false)
-  }, [])
-
-  useEffect(() => {
-    refresh()
-  }, [refresh])
-
-  const grade = useCallback(async (cardId, gradeValue) => {
+  const gradeCard = useCallback(async (cardId, gradeValue) => {
     const existing = await db.cardState.get(cardId)
     const prev = existing ?? { card_id: cardId, ...initialCardState() }
     const next = sm2(prev, gradeValue)
@@ -39,9 +16,34 @@ export function useSRS() {
       item_type: 'card',
       is_correct: gradeValue >= 3,
       studied_at: Date.now(),
+      studied_day: todayKey(),
       next_review_at: next.next_review_at,
     })
   }, [])
 
-  return { dueCards, loading, grade, refresh }
+  const recordQuestion = useCallback(async (questionId, isCorrect) => {
+    const existing = await db.questionState.get(questionId)
+    const prev = existing ?? {
+      question_id: questionId,
+      total_attempts: 0,
+      correct_attempts: 0,
+      last_answered_at: 0,
+    }
+    await db.questionState.put({
+      question_id: questionId,
+      total_attempts: prev.total_attempts + 1,
+      correct_attempts: prev.correct_attempts + (isCorrect ? 1 : 0),
+      last_answered_at: Date.now(),
+    })
+    await db.studyRecords.add({
+      item_id: questionId,
+      item_type: 'question',
+      is_correct: isCorrect,
+      studied_at: Date.now(),
+      studied_day: todayKey(),
+      next_review_at: Date.now(),
+    })
+  }, [])
+
+  return { gradeCard, recordQuestion }
 }

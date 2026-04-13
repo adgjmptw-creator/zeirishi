@@ -4,6 +4,7 @@ export default function Layout({ children }) {
   const { pathname } = useLocation()
   const title =
     pathname === '/' ? 'ホーム' :
+    pathname.startsWith('/mission') ? '今日のミッション' :
     pathname.startsWith('/cards') ? '暗記カード' :
     pathname.startsWith('/settings') ? '設定' : ''
 

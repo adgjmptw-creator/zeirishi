@@ -1,0 +1,64 @@
+{
+  "subject_id": "bookkeeping",
+  "chapter_id": "bk_ch02_journal",
+  "topic_id": "bk_ch02_t01_adjustments",
+  "questions": [
+    {
+      "id": "bk_q101",
+      "level": 1,
+      "type": "ox",
+      "question": "前払費用は貸借対照表上、負債の部に表示される。",
+      "answer": false,
+      "explanation": "前払費用は『将来の費用を先払いした権利』であり、資産（流動資産）として計上する。未払費用・前受収益が負債。",
+      "related_topic": "bk_ch02_t01_adjustments"
+    },
+    {
+      "id": "bk_q102",
+      "level": 2,
+      "type": "choice",
+      "question": "取得原価400,000円、残存価額0円、耐用年数5年の備品を定額法で償却する場合、1年分の減価償却費はいくらか。",
+      "choices": [
+        "A: 60,000円",
+        "B: 80,000円",
+        "C: 100,000円",
+        "D: 120,000円"
+      ],
+      "answer": "B",
+      "explanation": "定額法の減価償却費 = (取得原価 − 残存価額) ÷ 耐用年数 = (400,000 − 0) ÷ 5 = 80,000円。残存価額0でも備忘価額1円を最終年度に残す点に注意。",
+      "related_topic": "bk_ch02_t01_adjustments"
+    },
+    {
+      "id": "bk_q103",
+      "level": 2,
+      "type": "ox",
+      "question": "貸倒引当金の差額補充法では、期首残高がある場合でも期末見積額を全額『貸倒引当金繰入』として計上する。",
+      "answer": false,
+      "explanation": "差額補充法では『期末見積額 − 期首残高 = 繰入額』。期首残高があればその分だけ計上額が減る。全額計上するのは洗替法の発想。",
+      "related_topic": "bk_ch02_t01_adjustments"
+    },
+    {
+      "id": "bk_q104",
+      "level": 3,
+      "type": "choice",
+      "question": "その他有価証券の評価差額金はどのように処理するか（全部純資産直入法）。",
+      "choices": [
+        "A: P/Lの営業外収益または営業外費用に計上",
+        "B: P/Lの特別損益に計上",
+        "C: 純資産の部『評価・換算差額等』に直接計上",
+        "D: 評価しないで取得原価のまま"
+      ],
+      "answer": "C",
+      "explanation": "その他有価証券は期末に時価評価するが、売買目的と異なり評価差額をP/Lに計上せず、純資産の部の『評価・換算差額等』に直接計上する（全部純資産直入法）。税効果会計の対象となる。",
+      "related_topic": "bk_ch02_t01_adjustments"
+    },
+    {
+      "id": "bk_q105",
+      "level": 2,
+      "type": "ox",
+      "question": "棚卸資産の評価方法のうち、後入先出法は現行日本基準で認められている。",
+      "answer": false,
+      "explanation": "後入先出法は2010年の棚卸資産会計基準改正により廃止され、現行日本基準では採用できない。IFRSでも認められていない。",
+      "related_topic": "bk_ch02_t01_adjustments"
+    }
+  ]
+}

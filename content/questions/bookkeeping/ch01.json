@@ -1,0 +1,64 @@
+{
+  "subject_id": "bookkeeping",
+  "chapter_id": "bk_ch01_basics",
+  "topic_id": "bk_ch01_t01_five_elements",
+  "questions": [
+    {
+      "id": "bk_q001",
+      "level": 1,
+      "type": "ox",
+      "question": "借方は取引の左側を、貸方は右側を指す。",
+      "answer": true,
+      "explanation": "『借（か）り』の『り』は左払い、『貸（か）し』の『し』は右払いで覚えると混同しない。意味上の借りる・貸すとは無関係に、単に位置を表す記号として使う。",
+      "related_topic": "bk_ch01_t01_five_elements"
+    },
+    {
+      "id": "bk_q002",
+      "level": 1,
+      "type": "ox",
+      "question": "収益の発生は借方に記入する。",
+      "answer": false,
+      "explanation": "収益の発生は貸方（右）に記入する。借方は『資産・費用の増加、負債・純資産・収益の減少』、貸方は『負債・純資産・収益の増加、資産・費用の減少』。",
+      "related_topic": "bk_ch01_t01_five_elements"
+    },
+    {
+      "id": "bk_q003",
+      "level": 2,
+      "type": "choice",
+      "question": "次のうち、簿記上の取引ではないものはどれか。",
+      "choices": [
+        "A: 火災により倉庫が焼失した",
+        "B: 従業員との間で月給30万円の雇用契約を結んだ",
+        "C: 商品を現金で仕入れた",
+        "D: 銀行から借入をした"
+      ],
+      "answer": "B",
+      "explanation": "簿記上の取引は『資産・負債・資本の増減を伴う経済事象』。雇用契約の締結そのものは資産・負債を動かさないため簿記上の取引ではない。一方、火災による焼失は損失という資産減少を伴うため取引に該当する。",
+      "related_topic": "bk_ch01_t01_five_elements"
+    },
+    {
+      "id": "bk_q004",
+      "level": 2,
+      "type": "ox",
+      "question": "発生主義会計では、商品を掛けで販売した時点では売上を計上しない。",
+      "answer": false,
+      "explanation": "発生主義（および実現主義）の下では、商品の引渡しや役務の提供が完了した時点で収益を認識する。現金の受取を待たず掛け販売の時点で売上を計上する。",
+      "related_topic": "bk_ch01_t01_five_elements"
+    },
+    {
+      "id": "bk_q005",
+      "level": 2,
+      "type": "choice",
+      "question": "試算表で貸借の合計が一致しても検出できない誤りはどれか。",
+      "choices": [
+        "A: 転記漏れ（借方のみ）",
+        "B: 借方・貸方を逆に転記",
+        "C: 金額の記入誤り（片側のみ）",
+        "D: 取引そのものを仕訳し忘れた"
+      ],
+      "answer": "D",
+      "explanation": "試算表は貸借平均の原理に基づく検証にすぎない。取引そのものの記帳漏れや、借方貸方とも同額誤った場合は貸借一致のまま気づかない。A・Cは貸借不一致になるため検出可能、Bは金額が同じなら一致するが借方貸方両方に影響が出るため検出可能な場合もある。",
+      "related_topic": "bk_ch01_t01_five_elements"
+    }
+  ]
+}
