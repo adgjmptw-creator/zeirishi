@@ -44,11 +44,29 @@ export default function FlashCard({ card, onGrade }) {
         onClick={() => setFlipped((f) => !f)}
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
-        className="w-full max-w-md min-h-[60vh] rounded-3xl bg-slate-800 border border-slate-700 shadow-2xl p-6 flex items-center justify-center text-center select-none cursor-pointer"
+        className="w-full max-w-md min-h-[60vh] rounded-3xl bg-slate-800 border border-slate-700 shadow-2xl p-6 flex flex-col items-center justify-center text-center select-none cursor-pointer overflow-y-auto"
       >
-        <div className="text-xl leading-relaxed whitespace-pre-wrap">
-          {flipped ? card.back : card.front}
-        </div>
+        {flipped ? (
+          <div className="w-full flex flex-col gap-4">
+            <div className="text-lg leading-relaxed whitespace-pre-wrap text-left">
+              {card.back}
+            </div>
+            {card.memory_tip && (
+              <div className="rounded-xl bg-amber-500/10 border border-amber-500/30 p-3 text-left">
+                <div className="text-xs font-semibold text-amber-300 mb-1">
+                  💡 覚え方・ゴロ合わせ
+                </div>
+                <div className="text-sm leading-relaxed whitespace-pre-wrap text-amber-100">
+                  {card.memory_tip}
+                </div>
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="text-xl leading-relaxed whitespace-pre-wrap">
+            {card.front}
+          </div>
+        )}
       </div>
 
       <p className="text-xs text-slate-400 text-center">

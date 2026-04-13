@@ -4,7 +4,7 @@ import bookkeepingCh01 from '../../content/cards/bookkeeping/ch01.json'
 import fsCh01 from '../../content/cards/financial_statements/ch01.json'
 
 // Bump this whenever built-in content JSON changes so reloads pick it up.
-const CONTENT_VERSION = 1
+const CONTENT_VERSION = 2
 
 const CARD_FILES = [bookkeepingCh01, fsCh01]
 
@@ -46,6 +46,7 @@ export async function seedContent() {
           topic_id,
           front: c.front,
           back: c.back,
+          memory_tip: c.memory_tip ?? null,
           frequency_rank: c.frequency_rank ?? 'B',
           difficulty: c.difficulty ?? 1,
           subject_id,
