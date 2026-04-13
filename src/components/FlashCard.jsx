@@ -5,10 +5,14 @@ import { useRef, useState } from 'react'
 export default function FlashCard({ card, onGrade }) {
   const [flipped, setFlipped] = useState(false)
   const touchStart = useRef(null)
+  // Set by handleTouchEnd when a swipe is detected so the synthetic click
+  // that immediately follows touchend on mobile doesn't re-toggle the flip.
+  const didSwipe = useRef(false)
 
   const handleTouchStart = (e) => {
     const t = e.touches[0]
     touchStart.current = { x: t.clientX, y: t.clientY }
+    didSwipe.current = false
   }
 
   const handleTouchEnd = (e) => {
@@ -22,10 +26,11 @@ export default function FlashCard({ card, onGrade }) {
     const THRESHOLD = 40
 
     if (Math.max(absX, absY) < THRESHOLD) {
-      setFlipped((f) => !f)
+      // Tap: let onClick handle the flip so the event only fires once.
       return
     }
 
+    didSwipe.current = true
     if (absY > absX && dy < 0) {
       onGrade(5) // up = 自信あり
     } else if (dx > 0) {
@@ -36,12 +41,20 @@ export default function FlashCard({ card, onGrade }) {
     setFlipped(false)
   }
 
+  const handleClick = () => {
+    if (didSwipe.current) {
+      didSwipe.current = false
+      return
+    }
+    setFlipped((f) => !f)
+  }
+
   return (
     <div className="flex flex-col items-center gap-6">
       <div
         role="button"
         tabIndex={0}
-        onClick={() => setFlipped((f) => !f)}
+        onClick={handleClick}
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
         className="w-full max-w-md min-h-[60vh] rounded-3xl bg-slate-800 border border-slate-700 shadow-2xl p-6 flex flex-col items-center justify-center text-center select-none cursor-pointer overflow-y-auto"
