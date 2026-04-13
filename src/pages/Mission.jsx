@@ -88,6 +88,16 @@ export default function Mission() {
   const handleCardGrade = async (grade) => {
     await gradeCard(current.data.id, grade)
     await markStudiedToday()
+    // On "もう一度" (grade < 3) re-queue the card later in the same session
+    // so the user actually sees it again today, not just tomorrow via SM-2.
+    if (grade < 3) {
+      setSession((prev) => {
+        const next = [...prev]
+        const insertAt = Math.min(index + 4, next.length)
+        next.splice(insertAt, 0, current)
+        return next
+      })
+    }
     setIndex((i) => i + 1)
   }
 

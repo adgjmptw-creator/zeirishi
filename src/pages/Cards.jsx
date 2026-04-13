@@ -67,6 +67,15 @@ export default function Cards() {
   const handleGrade = async (g) => {
     await gradeCard(current.id, g)
     await markStudiedToday()
+    // On "もう一度" (grade < 3) requeue this card later in the session.
+    if (g < 3) {
+      setSession((prev) => {
+        const next = [...prev]
+        const insertAt = Math.min(index + 4, next.length)
+        next.splice(insertAt, 0, current)
+        return next
+      })
+    }
     setIndex((i) => i + 1)
   }
 
