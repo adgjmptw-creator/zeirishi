@@ -1,5 +1,6 @@
-// Daily mission engine: given the user's available study minutes, pick a
-// concrete list of cards and questions to work on right now.
+// Daily mission engine: given the user's available study minutes and
+// current target exam, pick a concrete list of cards and questions to
+// work on right now.
 //
 // Time budget assumptions (rough averages for commute-style study):
 //   - 1 flashcard review: ~20 seconds
@@ -8,6 +9,10 @@
 // Mix policy:
 //   - 70% of the time on cards (reviews first, then new intros)
 //   - 30% of the time on questions (weakest first, then unanswered)
+//
+// Target scoping: cards and questions outside the current target
+// (wrong subject or above maxLevel) are filtered out so a 簿記3級
+// learner never sees 税理士-level material until they switch target.
 
 const SECONDS_PER_CARD = 20
 const SECONDS_PER_QUESTION = 45
@@ -19,6 +24,7 @@ export function buildMission({
   cardStates,
   allQuestions,
   questionStates,
+  target = null,
   now = Date.now(),
 }) {
   const totalSeconds = dailyMinutes * 60
@@ -26,7 +32,22 @@ export function buildMission({
   const questionBudget = totalSeconds - cardBudget
 
   const cardSlots = Math.max(1, Math.floor(cardBudget / SECONDS_PER_CARD))
-  const questionSlots = Math.max(0, Math.floor(questionBudget / SECONDS_PER_QUESTION))
+  const questionSlots = Math.max(
+    0,
+    Math.floor(questionBudget / SECONDS_PER_QUESTION),
+  )
+
+  // Scope to the current target exam if one is active.
+  const maxLevel = target?.maxLevel ?? 4
+  const subjectIds = target?.subjectIds ?? null
+  const inScopeCard = (c) =>
+    (subjectIds === null || subjectIds.includes(c.subject_id)) &&
+    (c.curriculum_level ?? 3) <= maxLevel
+  const inScopeQuestion = (q) =>
+    subjectIds === null || subjectIds.includes(q.subject_id)
+
+  const scopedCards = allCards.filter(inScopeCard)
+  const scopedQuestions = allQuestions.filter(inScopeQuestion)
 
   const stateByCard = new Map(cardStates.map((s) => [s.card_id, s]))
   const stateByQ = new Map(questionStates.map((s) => [s.question_id, s]))
@@ -34,7 +55,7 @@ export function buildMission({
   // Cards: due first (SM-2 next_review_at <= now), then brand new cards.
   const dueCards = []
   const newCards = []
-  for (const card of allCards) {
+  for (const card of scopedCards) {
     const state = stateByCard.get(card.id)
     if (!state) {
       newCards.push(card)
@@ -57,7 +78,7 @@ export function buildMission({
   // Questions: unanswered first, then lowest accuracy among attempted.
   const unanswered = []
   const weak = []
-  for (const q of allQuestions) {
+  for (const q of scopedQuestions) {
     const state = stateByQ.get(q.id)
     if (!state || state.total_attempts === 0) {
       unanswered.push(q)

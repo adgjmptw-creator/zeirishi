@@ -2,20 +2,24 @@ import { useEffect, useState } from 'react'
 import { useApiKey } from '../hooks/useApiKey.js'
 import { useExamSchedule } from '../hooks/useExamSchedule.js'
 import { resetLearningState } from '../db/seed.js'
+import { TARGETS } from '../utils/targets.js'
 
 export default function Settings() {
   const { apiKey, loaded: apiLoaded, save: saveApiKey, clear: clearApiKey } = useApiKey()
   const {
     examDate,
     dailyMinutes,
+    targetId,
     loaded: scheduleLoaded,
     saveExamDate,
     saveDailyMinutes,
+    saveTargetId,
   } = useExamSchedule()
 
   const [apiValue, setApiValue] = useState('')
   const [examValue, setExamValue] = useState('')
   const [minutesValue, setMinutesValue] = useState(15)
+  const [targetValue, setTargetValue] = useState('bookkeeping_3')
   const [savedApi, setSavedApi] = useState(false)
   const [savedSchedule, setSavedSchedule] = useState(false)
   const [resetDone, setResetDone] = useState(false)
@@ -28,8 +32,9 @@ export default function Settings() {
     if (scheduleLoaded) {
       setExamValue(examDate)
       setMinutesValue(dailyMinutes)
+      setTargetValue(targetId)
     }
-  }, [scheduleLoaded, examDate, dailyMinutes])
+  }, [scheduleLoaded, examDate, dailyMinutes, targetId])
 
   const handleApiSubmit = async (e) => {
     e.preventDefault()
@@ -40,6 +45,7 @@ export default function Settings() {
 
   const handleScheduleSubmit = async (e) => {
     e.preventDefault()
+    await saveTargetId(targetValue)
     await saveExamDate(examValue)
     await saveDailyMinutes(minutesValue)
     setSavedSchedule(true)
@@ -57,15 +63,40 @@ export default function Settings() {
     }, 800)
   }
 
+  const selectedTarget = TARGETS[targetValue]
+
   return (
     <div className="flex flex-col gap-5">
-      {/* Exam schedule */}
+      {/* Target + exam schedule */}
       <section className="rounded-2xl bg-slate-800 border border-slate-700 p-5">
-        <h2 className="text-sm text-slate-300 font-semibold mb-1">試験日と1日の目標</h2>
+        <h2 className="text-sm text-slate-300 font-semibold mb-1">
+          目標と学習計画
+        </h2>
         <p className="text-xs text-slate-500 mb-3">
-          試験日までの残日数と1日の学習目標（分）から、毎日のミッションが自動計算されます。
+          まず目指す試験を選びます。簿記未経験の方は『日商簿記3級』からの
+          スタートが最短です。
         </p>
-        <form onSubmit={handleScheduleSubmit} className="flex flex-col gap-3">
+        <form onSubmit={handleScheduleSubmit} className="flex flex-col gap-4">
+          <label className="flex flex-col gap-1">
+            <span className="text-xs text-slate-400">目標試験</span>
+            <select
+              value={targetValue}
+              onChange={(e) => setTargetValue(e.target.value)}
+              className="px-3 py-3 rounded-lg bg-slate-900 border border-slate-700 text-slate-100"
+            >
+              {Object.values(TARGETS).map((t) => (
+                <option key={t.id} value={t.id}>
+                  {t.label}
+                </option>
+              ))}
+            </select>
+            {selectedTarget && (
+              <span className="text-[11px] text-slate-500 mt-1 leading-relaxed">
+                {selectedTarget.description}
+              </span>
+            )}
+          </label>
+
           <label className="flex flex-col gap-1">
             <span className="text-xs text-slate-400">試験日</span>
             <input
@@ -75,6 +106,7 @@ export default function Settings() {
               className="px-3 py-3 rounded-lg bg-slate-900 border border-slate-700 text-slate-100"
             />
           </label>
+
           <label className="flex flex-col gap-1">
             <span className="text-xs text-slate-400">1日の学習目標（分）</span>
             <input
@@ -87,6 +119,7 @@ export default function Settings() {
               className="px-3 py-3 rounded-lg bg-slate-900 border border-slate-700 text-slate-100"
             />
           </label>
+
           <button
             type="submit"
             className="py-3 rounded-lg bg-sky-600 active:bg-sky-700 font-semibold"

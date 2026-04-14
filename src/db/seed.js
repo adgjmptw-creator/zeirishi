@@ -4,6 +4,8 @@ import subjectsData from '../../content/subjects.json'
 // Card files - ordered from absolute-beginner intro to advanced.
 import bkCh00a from '../../content/cards/bookkeeping/ch00a_intro.json'
 import bkCh00b from '../../content/cards/bookkeeping/ch00b_basics.json'
+import bkCh00c from '../../content/cards/bookkeeping/ch00c_daily.json'
+import bkCh00d from '../../content/cards/bookkeeping/ch00d_closing.json'
 import bkCh01 from '../../content/cards/bookkeeping/ch01.json'
 import bkCh02 from '../../content/cards/bookkeeping/ch02.json'
 import bkCh03 from '../../content/cards/bookkeeping/ch03.json'
@@ -21,11 +23,13 @@ import fsQ01 from '../../content/questions/financial_statements/ch01.json'
 import fsQ02 from '../../content/questions/financial_statements/ch02.json'
 
 // Bump this whenever built-in content JSON changes so reloads pick it up.
-const CONTENT_VERSION = 4
+const CONTENT_VERSION = 5
 
 const CARD_FILES = [
   bkCh00a,
   bkCh00b,
+  bkCh00c,
+  bkCh00d,
   bkCh01,
   bkCh02,
   bkCh03,

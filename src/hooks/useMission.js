@@ -4,7 +4,7 @@ import { buildMission } from '../utils/dailyMission.js'
 import { useExamSchedule } from './useExamSchedule.js'
 
 export function useMission() {
-  const { dailyMinutes, loaded: scheduleLoaded } = useExamSchedule()
+  const { dailyMinutes, target, loaded: scheduleLoaded } = useExamSchedule()
   const [mission, setMission] = useState(null)
   const [loading, setLoading] = useState(true)
 
@@ -23,10 +23,11 @@ export function useMission() {
       cardStates,
       allQuestions,
       questionStates,
+      target,
     })
     setMission(m)
     setLoading(false)
-  }, [dailyMinutes, scheduleLoaded])
+  }, [dailyMinutes, target, scheduleLoaded])
 
   useEffect(() => {
     refresh()

@@ -3,12 +3,14 @@ import { useMission } from '../hooks/useMission.js'
 import { useStreak } from '../hooks/useStreak.js'
 import { useExamSchedule } from '../hooks/useExamSchedule.js'
 import { useStats } from '../hooks/useStats.js'
+import { useTargetProgress } from '../hooks/useTargetProgress.js'
 
 export default function Home() {
   const { mission, loading } = useMission()
   const { streak } = useStreak()
-  const { examDate, daysRemaining, dailyMinutes } = useExamSchedule()
+  const { examDate, daysRemaining, dailyMinutes, target } = useExamSchedule()
   const { stats } = useStats()
+  const { progress } = useTargetProgress()
 
   const missionCardCount = mission?.cards.length ?? 0
   const missionQuestionCount = mission?.questions.length ?? 0
@@ -17,8 +19,45 @@ export default function Home() {
     ? Math.max(1, Math.round(mission.estimatedSeconds / 60))
     : 0
 
+  const stageLabel = progress
+    ? target.stageLabels[progress.stage] ?? `Level ${progress.stage}`
+    : ''
+
   return (
     <div className="flex flex-col gap-5">
+      {/* Target milestone card */}
+      <div className="rounded-3xl bg-gradient-to-br from-indigo-700 to-indigo-900 border border-indigo-500/30 p-5 shadow-lg">
+        <div className="flex items-center justify-between">
+          <div className="text-[10px] uppercase tracking-wider text-indigo-200">
+            目標
+          </div>
+          <Link to="/settings" className="text-[10px] text-indigo-200 underline">
+            変更
+          </Link>
+        </div>
+        <div className="text-xl font-bold mt-1">🎯 {target.label}</div>
+        {progress && (
+          <>
+            <div className="mt-3 text-xs text-indigo-200">
+              現在のステージ:{' '}
+              <span className="text-white font-semibold">
+                Level {progress.stage} ({stageLabel})
+              </span>
+            </div>
+            <div className="mt-1 text-[11px] text-indigo-200">
+              習得率 {progress.percent}% ({progress.totalMastered}/
+              {progress.totalCards} 枚)
+            </div>
+            <div className="mt-2 h-2 bg-indigo-950 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-indigo-300 transition-all"
+                style={{ width: `${progress.percent}%` }}
+              />
+            </div>
+          </>
+        )}
+      </div>
+
       {/* Top row: streak + exam countdown */}
       <div className="grid grid-cols-2 gap-3">
         <div className="rounded-2xl bg-slate-800 border border-slate-700 p-4">
@@ -68,7 +107,8 @@ export default function Home() {
         ) : (
           <>
             <div className="text-2xl font-bold mt-1">
-              カード {missionCardCount} 枚 + 問題 {missionQuestionCount} 問
+              カード {missionCardCount} 枚
+              {missionQuestionCount > 0 && ` + 問題 ${missionQuestionCount} 問`}
             </div>
             <p className="text-xs text-sky-200 mt-1">
               想定 約{estimatedMinutes}分 ・ 目標 {dailyMinutes}分
@@ -82,6 +122,47 @@ export default function Home() {
           </>
         )}
       </div>
+
+      {/* Level breakdown */}
+      {progress && (
+        <div className="rounded-2xl bg-slate-800 border border-slate-700 p-4">
+          <div className="text-[10px] uppercase tracking-wider text-slate-500 mb-3">
+            レベル別の進捗
+          </div>
+          <div className="flex flex-col gap-2">
+            {Array.from({ length: target.maxLevel }, (_, i) => i + 1).map(
+              (lvl) => {
+                const stats = progress.byLevel[lvl]
+                if (!stats || stats.total === 0) return null
+                const percent = Math.round(
+                  (stats.mastered / stats.total) * 100,
+                )
+                const isCurrent = progress.stage === lvl
+                return (
+                  <div key={lvl}>
+                    <div className="flex items-center justify-between text-xs mb-1">
+                      <span className={isCurrent ? 'text-sky-300 font-semibold' : 'text-slate-400'}>
+                        {isCurrent && '▶ '}Level {lvl}・{target.stageLabels[lvl]}
+                      </span>
+                      <span className="text-slate-500">
+                        {stats.mastered}/{stats.total} ({percent}%)
+                      </span>
+                    </div>
+                    <div className="h-1.5 bg-slate-900 rounded-full overflow-hidden">
+                      <div
+                        className={`h-full transition-all ${
+                          isCurrent ? 'bg-sky-500' : 'bg-slate-600'
+                        }`}
+                        style={{ width: `${percent}%` }}
+                      />
+                    </div>
+                  </div>
+                )
+              },
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Stats row */}
       <div className="rounded-2xl bg-slate-800 border border-slate-700 p-4">
